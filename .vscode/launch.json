@@ -1,0 +1,43 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "debug_code",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "module": "main",
+            "env": {
+                // "CUDA_VISIBLE_DEVICES": "0",
+            },
+
+
+            // test cifar
+            "args": [
+                "--dataset", "CIFAR-100",
+                "--num_classes", "100",
+                "--num_tasks", "10",
+                "--model_name", "vit_base_patch16_224",
+                "--embedding_dim", "768",
+                "--expand_dim", "10000",
+                "--synaptic_degree", "300",
+                "--coding_level", "0.3",
+                "--seed", "2025",
+                "--batch_size", "500",
+                "--gpu", "3",
+                "--data_augmentation", "vit",
+                "--ridge_lower", "6",
+                "--ridge_upper", "10",
+
+                "--root", "./datasets/data",
+            ],
+
+
+
+
+            // "justMyCode": false,
+            "justMyCode": true,
+            "console": "integratedTerminal"
+        },
+    ]
+}
