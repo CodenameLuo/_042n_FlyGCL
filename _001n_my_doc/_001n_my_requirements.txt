@@ -1,7 +1,7 @@
 
 # Core deep learning and scientific computing
 
-conda create --prefix ./_004n_FlyPrompt python=3.11.13
+conda create --prefix ./_004n_FlyPrompt python=3.10.18
 
 # CUDA 11.8
 pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu118

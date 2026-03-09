@@ -11,13 +11,18 @@ import models.vit as vit
 logger = logging.getLogger()
 
 
+# 专家提示模块
 class Prompt(nn.Module):
-    def __init__(self,
-                 num_experts: int,
-                 len_prompt: int = 20,
-                 embed_dim: int = 768,
-                 pos_prompt: Iterable[int] = (0, 1, 2, 3, 4)):
+    def __init__(
+        self, 
+        num_experts: int,        # 专家总数，即任务总数 T
+        len_prompt: int = 20,    # 每个 prompt 包含多少个 token
+        embed_dim: int = 768,    # 每个 token 的维度，和 Vit 的嵌入维度一致
+        pos_prompt: Iterable[int] = (0, 1, 2, 3, 4)  # prompt 要插入到 ViT 的哪些 Transformer 层 (默认第0到第4层，共五层)
+    ):
+
         super().__init__()
+        
         self.num_experts = num_experts
         self.len_prompt = len_prompt
         self.embed_dim = embed_dim
@@ -25,9 +30,22 @@ class Prompt(nn.Module):
         self.register_buffer('pos_prompt', torch.tensor(list(pos_prompt), dtype=torch.int64))
         self.num_layers = int(self.pos_prompt.numel())
 
+        # 核心参数：所有专家的prompt
+        # 形状为 [插入的层数，专家数，prompt长度，嵌入维度]
+        # 比如，默认配置就是 [5, 10, 20, 768]
+        ## === 
+        ## 这个四维张量存储了 所有专家 在 所有层 的 prompt 
+        ## 第一维是层索引，第二维是专家索引，第三维和第四维是具体的每个 prompt token
         self.prompts = nn.Parameter(
-            torch.empty(self.num_layers, num_experts, len_prompt, embed_dim)
+            torch.empty(
+                self.num_layers, # 插入的总层数
+                num_experts,     # 专家总数
+                len_prompt,      # prompt 的长度，即每个 prompt 包含多少个 token
+                embed_dim        # 每个 token 的嵌入向量维度
+            )
         )
+        # === 
+
         nn.init.uniform_(self.prompts)
 
     def _build_batched_prompts(self, backbone: nn.Module, expert_ids: torch.Tensor) -> torch.Tensor:
@@ -43,8 +61,17 @@ class Prompt(nn.Module):
         prompts = prompts + pos_bias
         return prompts
 
-    def forward(self, backbone: nn.Module, inputs: torch.Tensor, expert_ids: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self, 
+        backbone: nn.Module, 
+        inputs: torch.Tensor, 
+        expert_ids: torch.Tensor
+    ) -> torch.Tensor:
+
+        # 1. 通过 ViT 的 patch embedding 层，得到 token 序列
+        # (框架图中 Input 的产生)
         x = backbone.patch_embed(inputs)
+
         B, N, D = x.size()
         cls_token = backbone.cls_token.expand(B, -1, -1)
         token_appended = torch.cat((cls_token, x), dim=1)
