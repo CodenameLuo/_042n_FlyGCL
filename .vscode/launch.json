@@ -8,28 +8,32 @@
             "cwd": "${workspaceFolder}",
             "module": "main",
             "env": {
-                // "CUDA_VISIBLE_DEVICES": "0",
+                "CUDA_VISIBLE_DEVICES": "0",
             },
 
 
             // test cifar
             "args": [
-                "--dataset", "CIFAR-100",
-                "--num_classes", "100",
-                "--num_tasks", "10",
-                "--model_name", "vit_base_patch16_224",
-                "--embedding_dim", "768",
-                "--expand_dim", "10000",
-                "--synaptic_degree", "300",
-                "--coding_level", "0.3",
-                "--seed", "2025",
-                "--batch_size", "500",
-                "--gpu", "3",
-                "--data_augmentation", "vit",
-                "--ridge_lower", "6",
-                "--ridge_upper", "10",
+                "--method", "flyprompt",
+                "--dataset", "cifar100",
+                "--data_dir", "./_002n_data/CIFAR",
+                "--backbone", "vit_base_patch16_224_mepo_21k_1k",
+                
+                "--n_tasks", "5",
+                "--n", "50",
+                "--m", "10",
 
-                "--root", "./datasets/data",
+                "--batchsize", "64",
+                "--lr", "0.005",
+
+                "--online_iter", "3",
+                "--num_epochs", "1",
+
+                "--use_amp",
+
+                "--eval_period", "1000",
+
+                "--note", "flyprompt_cifar100",
             ],
 
 

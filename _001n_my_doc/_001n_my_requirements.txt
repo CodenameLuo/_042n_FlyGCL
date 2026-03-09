@@ -1,4 +1,6 @@
 
+# Core deep learning and scientific computing
+
 conda create --prefix ./_004n_FlyPrompt python=3.11.13
 
 # CUDA 11.8
@@ -9,4 +11,24 @@ pip install numpy==2.0.2
 pip install scipy==1.13.1
 pip install scikit-learn==1.6.0
 
+# Computer vision and image processing
 
+pip install opencv-python==4.12.0.88
+pip install pillow==11.0.0
+
+# Data manipulation and analysis
+
+pip install pandas==2.2.3
+
+# Visualization
+
+pip install matplotlib==3.9.4
+pip install seaborn==0.13.2
+
+# Experiment tracking and logging
+
+pip install wandb==0.20.1
+
+# Progress bars and utilities
+
+pip install tqdm==4.65.2
