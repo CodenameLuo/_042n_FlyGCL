@@ -1,0 +1,24 @@
+
+===================================================================
+
+类 prompt 中的 prompts ：
+
+        self.prompts = nn.Parameter(
+            torch.empty(
+                self.num_layers, # 插入的总层数
+                num_experts,     # 专家总数，即任务数
+                len_prompt,      # prompt 的长度，即每个 prompt 包含多少个 token
+                embed_dim        # 每个 token 的嵌入向量维度
+            )
+        )
+
+存的是 [ 0 插入的层索引, 1 专家(prompts)索引, 2 当前专家的 prompt token 索引, 3 prompt token 的嵌入向量内容 ]
+
+===================================================================
+
+类 prompt 的函数 _build_batched_prompts 中的 prompts ：
+
+        prompts 的形状：
+        torch.Size([64, 5, 20, 768])
+
+存的是 [ 0 图片索引, 1 插入的层索引, 2 当前图片对应专家的 prompt token 索引, 3 prompt token 的嵌入向量内容 ]

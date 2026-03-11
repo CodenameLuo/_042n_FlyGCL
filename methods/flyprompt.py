@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader
 
 from methods._trainer import _Trainer
 
+
 logger = logging.getLogger()
 
 
